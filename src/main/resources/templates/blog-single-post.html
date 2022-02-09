@@ -1,0 +1,444 @@
+<!doctype html>
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeTube video</title>
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="layerslider/css/layerslider.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/jquery.kyco.easyshare.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+<div class="off-canvas-wrapper">
+    <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+		<!--header-->
+		<div th:replace="~{fragments/header::header}"></div>
+	
+		<!-- End Header -->
+            <!--breadcrumbs-->
+            <section id="breadcrumb" class="breadMargin">
+                <div class="row">
+                    <div class="large-12 columns">
+                        <nav aria-label="You are here:" role="navigation">
+                            <ul class="breadcrumbs">
+                                <li><i class="fa fa-home"></i><a href="/index">Home</a></li>
+                                <li>
+                                    <span class="show-for-sr">Current: </span> Blog
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </section><!--end breadcrumbs-->
+
+            <section class="category-content">
+                <div class="row">
+                    <!-- left side content area -->
+                    <div class="large-8 columns">
+                        <div class="blog-post">
+                            <div class="row secBg">
+                                <div class="large-12 columns">
+                                    <div class="blog-post-heading">
+                                        <h3><a href="javascript:;" th:text="${blog.title}">There are many variations of passage. </a></h3>
+                                        <p>
+                                            <span><i class="fa fa-user"></i><a th:href="'/findUserAboutMeById?id='+${blog.user.id}" th:text="${blog.user.displayName}">admin</a></span>
+                                            <span><i class="fa fa-clock-o"></i><span th:text="${blog.createTime}">5 January 16</span></span>
+                                            <span><i class="fa fa-eye"></i><span th:text="${blog.viewNumber}">1,862K</span></span>
+                                            <span><i class="fa fa-commenting"></i></span>
+                                        </p>
+                                    </div>
+                                    <div class="blog-post-content">
+                                        <div class="blog-post-img">
+                                            <img th:src="'/upload/'+${blog.coverImage}" alt="blog image">
+                                        </div>
+										<hr>
+                                        <p th:utext="${blog.content}">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. </p>
+                                        
+										<div class="blog-post-extras">
+                                            <div class="categories extras">
+                                                <button><i class="fa fa-folder-open"></i>categories</button>
+                                                <a href="#" th:text="${blog.category.category}">entertainment</a>
+                                            </div>
+                                            <div class="categories extras">
+                                                <button><i class="fa fa-file"></i>subCategory</button>
+                                                <a href="#" th:text="${blog.subCategory.subCategory}">entertainment</a>
+                                            </div>
+                                            <div class="tags extras">
+                                                <button><i class="fa fa-tags"></i>tags</button>
+                                                <a href="#" th:each="tag:${blog.blogTags}" th:text="${tag.tag}" style="margin-right: 5px;">3d movies</a>
+                                            </div>
+                                            <div class="social-share extras">
+                                                <div class="post-like-btn clearfix">
+                                                    <div class="easy-share" data-easyshare data-easyshare-http data-easyshare-url="http://joinwebs.com">
+
+                                                        <button class="float-left"><i class="fa fa-share-alt"></i>share</button>
+                                                        <!-- Facebook -->
+                                                        <button class="removeBorder" data-easyshare-button="facebook">
+                                                            <span class="fa fa-facebook"></span>
+                                                        </button>
+
+                                                        <!-- Twitter -->
+                                                        <button class="removeBorder" data-easyshare-button="twitter" data-easyshare-tweet-text="">
+                                                            <span class="fa fa-twitter"></span>
+                                                        </button>
+
+                                                        <!-- Google+ -->
+                                                        <button class="removeBorder" data-easyshare-button="google">
+                                                            <span class="fa fa-google-plus"></span>
+                                                        </button>
+
+                                                        <div data-easyshare-loader>Loading...</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="blog-pagination text-center">
+                                            <a href="#"><i class="fa fa-long-arrow-left left-arrow"></i>previous post</a>
+                                            <a href="#">next post<i class="fa fa-long-arrow-right right-arrow"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end blog post -->
+                        <!-- post written by -->
+                        <div class="blog-post-written">
+                            <div class="row secBg">
+                                <div class="large-12 columns">
+                                    <div class="media-object">
+                                        <div class="media-object-section">
+                                            <div class="blog-post-author-img" style="width: 120px;height: 110px;">
+                                                <img th:src="'/upload/'+${blog.user.headImage}"  alt="blog post author">
+                                            </div>
+                                        </div>
+                                        <div class="media-object-section">
+                                            <div class="blog-post-author-des">
+                                                <h5>Written by <span th:text="${blog.user.displayName}">Admin</span></h5>
+                                                <p th:text="${blog.user.description}">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventoresunt explicabo. Iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventoresunt explicabo.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Comments -->
+                        <section th:replace="~{fragments/comment-reply::commentReply}"></section>
+						<!-- End Comments -->
+						
+                        <!-- ad Section -->
+                        <div class="googleAdv">
+                            <a href="#"><img src="images/goodleadv.png" alt="googel ads"></a>
+                        </div><!-- End ad Section -->
+                    </div><!-- end left side content area -->
+                    <!-- sidebar -->
+                    <div class="large-4 columns">
+                        <div th:replace="~{fragments/blog-video-right::blogVideoRight}"></div>
+                    </div><!-- end sidebar -->
+                </div>
+            </section><!-- End Category Content-->
+		<!-- footer -->
+		<div th:replace="~{fragments/footer::footer}"></div>
+		<!-- footer -->
+        </div><!--end off canvas content-->
+    </div><!--end off canvas wrapper inner-->
+</div><!--end off canvas wrapper-->
+
+
+<!-- script files -->
+<script src="js/jquery.js"></script>
+<script src="layer/layer.js"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    // 评论点踩
+    function videoBlogCommentDisagree(videoBlogCommentId) {
+        console.log(videoBlogCommentId);
+
+        $.post(
+            [[@{~/addDisagreeVideoBlogComment}]],
+                {"videoBlogCommentId":videoBlogCommentId},
+                function (data) {
+                    if (data.success) {
+                        layer.msg("踩");
+                        // 更换i标签的class
+                        document.getElementById("disagreei"+videoBlogCommentId).className = "fa fa-thumbs-down";
+                        document.getElementById("disagreei"+videoBlogCommentId).innerHTML = "&nbsp;" + data.num;
+                    } else {
+                        layer.msg("取消踩");
+                        document.getElementById("disagreei"+videoBlogCommentId).className = "fa fa-thumbs-o-down";
+                        document.getElementById("disagreei"+videoBlogCommentId).innerHTML = "&nbsp;" + data.num;
+                    }
+                },
+                "json"
+        )
+    }
+
+    // 评论点赞
+    function videoBlogCommentAgree(videoBlogCommentId) {
+        console.log(videoBlogCommentId);
+
+        $.post(
+            [[@{~/addAgreeVideoBlogComment}]],
+                {"videoBlogCommentId":videoBlogCommentId},
+                function (data) {
+                    if (data.success) {
+                        layer.msg("赞");
+                        // 更换i标签的class
+                        document.getElementById("agreei"+videoBlogCommentId).className = "fa fa-thumbs-up";
+                        document.getElementById("agreei"+videoBlogCommentId).innerHTML = "&nbsp;" + data.num;
+                    } else {
+                        layer.msg("取消赞");
+                        document.getElementById("agreei"+videoBlogCommentId).className = "fa fa-thumbs-o-up";
+                        document.getElementById("agreei"+videoBlogCommentId).innerHTML = "&nbsp;" + data.num;
+                    }
+                },
+                "json"
+        )
+
+    }
+
+
+    // 视频评论的添加
+    function videoCommentSend() {
+
+        // console.log($("#videoCommentTextarea").val());
+        var commentContent = $("#videoCommentTextarea").val();
+        $.post(
+            [[@{~/addBlogComment}]],
+                {"commentContent":commentContent, "blogId":[[${blog.id}]]},
+                function (data) {
+                    if (data.success) {
+                        layer.msg("发送成功")
+						// 将comment数目+1
+                        var commentNum = document.getElementById("commentNum");
+                        var num = parseInt(commentNum.innerHTML);
+                        commentNum.innerHTML = num + 1;
+                        // 动态添加HTML
+                        var comment =
+                            '<div class="media-object stack-for-small">' +
+								'<div class="media-object-section comment-img text-center">' +
+									'<div class="comment-box-img">' +
+										'<img src=[[|upload/${session.user.headImage}|]] alt="comment">' +
+									'</div>' +
+								'</div>' +
+								'<div class="media-object-section comment-desc">' +
+									'<div class="comment-title">' +
+										'<span class="name"><a target="_blank" href="[[|/findUserAboutMeById?id=${session.user.id}|]]">[[${session.user.displayName}]]</a> Said:</span>' +
+										'<span class="time float-right"><i class="fa fa-clock-o"></i>a moment ago</span>' +
+									'</div>' +
+								'<div class="comment-text">' +
+									'<p>'+commentContent+'</p>' +
+								'</div>' +
+								'<div class="comment-btns">' +
+									'<span>' +
+										'<a href="javascript:;" onclick="videoBlogCommentAgree(\''+data.videoBlogCommentId+'\')">' +
+											'<i id="agreei'+data.videoBlogCommentId+'" class="fa fa-thumbs-o-up">&nbsp;0</i>' +
+										'</a>' +
+										'|' +
+										'<a href="javascript:;" onclick="videoBlogCommentDisagree(\''+data.videoBlogCommentId+'\')">' +
+											'<i id="disagreei'+data.videoBlogCommentId+'" class="fa fa-thumbs-o-down">&nbsp;0</i>' +
+										'</a>' +
+									'</span>' +
+									'<span><a href="javascript:;" onclick="videoReplyClick(\''+data.videoBlogCommentId+'\')"><i class="fa fa-share"></i>Reply</a></span>' +
+									'<span class="reply float-right hide-reply"></span>' +
+								'</div>' +
+								'<div id="'+data.videoBlogCommentId+'" class="comment-box thumb-border" hidden>'+
+									'<div class="media-object stack-for-small">'+
+										'<div class="media-object-section comment-img text-center">'+
+											'<div class="comment-box-img">'+
+                           						 '<img src=[[|upload/${session.user.headImage}|]] alt="comment">'+
+											'</div>'+
+											'<h6><a target="_blank" href="[[|/findUserAboutMeById?id=${session.user.id}|]]">[[${session.user.displayName}]]</a></h6>'+
+										'</div>'+
+                            			'<div class="media-object-section comment-textarea">'+
+											'<input id="videoReplyInput'+data.videoBlogCommentId+'" hidden="hidden">'+
+											'<textarea id="videoReplyTextarea'+data.videoBlogCommentId+'" name="commentText" placeholder="Add a comment here.."></textarea>'+
+											'<input onclick="videoReplySend(\''+data.videoBlogCommentId+'\')" type="submit" name="submit" value="send">'+
+										'</div>'+
+									'</div>'+
+								'</div>'+
+                            	'<div id="subComment'+data.videoBlogCommentId+'"></div>'+
+                            	'</div>' +
+                            '</div>';
+
+                        $("#addCommentId").before(comment);
+                    }
+                },
+                "json"
+        )
+
+    }
+
+    // 添加视频评论的回复
+    function videoReplySend(videoBlogCommentId) {
+        // console.log("123");
+
+        var videoCommentId = document.getElementById("videoReplyInput"+videoBlogCommentId).value;
+        var content = document.getElementById("videoReplyTextarea"+videoBlogCommentId).value;
+
+        $.post(
+            [[@{~/addVideoReply}]],
+                {"commentContent":content, "videoCommentId": videoCommentId},
+                function (data) {
+                    if (data.success) {
+                        layer.msg("发送成功")
+                        // 动态添加HTML
+                        var subComment =
+                            '<div class="media-object stack-for-small reply-comment">' +
+								'<div class="media-object-section comment-img text-center">' +
+									'<div class="comment-box-img">' +
+										'<img src=[[|upload/${session.user.headImage}|]] alt="comment">' +
+									'</div>' +
+								'</div>' +
+								'<div class="media-object-section comment-desc">' +
+									'<div class="comment-title">' +
+										'<span class="name"><a target="_blank" href="[[|/findUserAboutMeById?id=${session.user.id}|]]">[[${session.user.displayName}]]</a> Said:</span>' +
+										'<span class="time float-right"><i class="fa fa-clock-o"></i>a moment ago</span>' +
+									'</div>' +
+									'<div class="comment-text">' +
+										'<p>'+content+'</p>' +
+									'</div>' +
+									'<div class="comment-btns">' +
+											'<span>' +
+											'<a href="javascript:;" onclick="videoBlogCommentAgree(\''+data.videoBlogReplyId+'\')">' +
+												'<i id="agreei'+data.videoBlogReplyId+'" class="fa fa-thumbs-o-up">&nbsp;0</i>' +
+											'</a>' +
+											'|' +
+											'<a href="javascript:;" onclick="videoBlogCommentDisagree(\''+data.videoBlogReplyId+'\')">' +
+												'<i id="disagreei'+data.videoBlogReplyId+'" class="fa fa-thumbs-o-down">&nbsp;0</i>' +
+											'</a>' +
+											'</span>' +
+										'<span><a href="javascript:;" onclick="videoReplyReplyClick(\''+data.videoBlogReplyId+'\')"><i class="fa fa-share"></i>Reply</a></span>'+
+										'<span class="reply float-right hide-reply"></span>' +
+									'</div>' +
+									'<div id="'+data.videoBlogReplyId+'" class="comment-box thumb-border" hidden>'+
+										'<div class="media-object stack-for-small">'+
+											'<div class="media-object-section comment-img text-center">'+
+												'<div class="comment-box-img">'+
+													'<img src=[[|upload/${session.user.headImage}|]] alt="comment">'+
+												'</div>'+
+												'<h6><a target="_blank" href=[[|findUserAboutMeById?id=${session.user.id}|]]>[[${session.user.displayName}]]</a></h6>'+
+											'</div>'+
+											'<div class="media-object-section comment-textarea">'+
+												'<input id="videoReplyReplyInput'+data.videoBlogReplyId+'" hidden="hidden">'+
+												'<textarea id="videoReplyReplyTextarea'+data.videoBlogReplyId+'" name="commentText" placeholder="Add a comment here.."></textarea>'+
+												'<input onclick="videoReplyReplySend(\''+data.videoBlogReplyId+'\')" type="submit" name="submit" value="send">'+
+											'</div>'+
+										'</div>'+
+									'</div>'+
+								'</div>' +
+								'<div id="videoBlogReplyDiv'+data.videoBlogReplyId+'"></div>'+
+                            '</div>';
+
+                        // $("#addCommentId").before(comment);
+                        document.getElementById("subComment"+videoCommentId).innerHTML = subComment;
+                    }
+                },
+                "json"
+        )
+    }
+
+    // 添加视频评论回复的回复
+    function videoReplyReplySend(videoBlogReplyId) {
+
+        var videoReplyReplyId = document.getElementById("videoReplyReplyInput"+videoBlogReplyId).value;
+        var content = document.getElementById("videoReplyReplyTextarea"+videoBlogReplyId).value;
+        // console.log(content);
+
+        $.post(
+            [[@{~/addVideoReplyReply}]],
+                {"commentContent":content, "videoReplyReplyId":videoBlogReplyId},
+                function (data) {
+
+                    var reply =
+                        '<div class="media-object stack-for-small reply-comment">' +
+							'<div class="media-object-section comment-img text-center">' +
+								'<div class="comment-box-img">' +
+									'<img src=[[|upload/${session.user.headImage}|]] alt="comment">' +
+								'</div>' +
+							'</div>' +
+							'<div class="media-object-section comment-desc">' +
+								'<div class="comment-title">' +
+									'<span class="name"><a target="_blank" href="/findUserAboutMeById?id=[[${session.user.id}]]">[[${session.user.displayName}]]</a> Said:</span>' +
+									'<span class="time float-right"><i class="fa fa-clock-o"></i>a moment ago</span>' +
+								'</div>' +
+								'<div class="comment-text">' +
+									'<p>'+content+'</p>' +
+									'<blockquote style="padding: 0 1.25rem 0 1.875rem;border-left: 4px solid #cacaca;font-size: 13px">回复 '+data.replyUserDisplayName+' : '+data.replyContent+'</blockquote>'+
+								'</div>' +
+									'<div class="comment-btns">' +
+									'<span>' +
+										'<a href="javascript:;" onclick="videoBlogCommentAgree(\''+data.videoReplyReplyReplyId+'\')">' +
+											'<i id="agreei'+data.videoReplyReplyReplyId+'" class="fa fa-thumbs-o-up">&nbsp;0</i>' +
+										'</a>' +
+										'|' +
+										'<a href="javascript:;" onclick="videoBlogCommentDisagree(\''+data.videoReplyReplyReplyId+'\')">' +
+											'<i id="disagreei'+data.videoReplyReplyReplyId+'" class="fa fa-thumbs-o-down">&nbsp;0</i>' +
+										'</a>' +
+									'</span>' +
+									'<span><a href="#"><i class="fa fa-share"></i>Reply</a></span>' +
+									'<span class="reply float-right hide-reply"></span>' +
+								'</div>' +
+							'</div>' +
+                        '</div>';
+
+                    document.getElementById("videoBlogReplyDiv"+videoBlogReplyId).innerHTML = reply;
+
+                },
+                "json"
+        )
+    }
+	
+    // 评论的回复输入框弹出
+    function videoReplyClick(videoBlogCommentId) {
+        // console.log(videoBlogCommentId);
+
+        // 显示输入框
+        if(document.getElementById(videoBlogCommentId).hidden) {
+            document.getElementById(videoBlogCommentId).removeAttribute("hidden");
+            // 传入id
+            // $("#videoBlogReplyInput").val(videoBlogCommentId);
+            document.getElementById("videoReplyInput"+videoBlogCommentId).value = videoBlogCommentId;
+        } else {
+            document.getElementById(videoBlogCommentId).setAttribute("hidden", "hidden");
+        }
+
+    }
+
+    // 回复的回复输入框弹出
+    function videoReplyReplyClick(videoBlogReplyId) {
+        // console.log(videoBlogReplyId);
+
+        // 显示输入框
+        if(document.getElementById(videoBlogReplyId).hidden) {
+            document.getElementById(videoBlogReplyId).removeAttribute("hidden");
+            // 传入id
+            document.getElementById("videoReplyReplyInput"+videoBlogReplyId).value = videoBlogReplyId;
+        } else {
+            document.getElementById(videoBlogReplyId).setAttribute("hidden", "hidden");
+        }
+    }
+	
+</script>
+
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/what-input/what-input.js"></script>
+<script src="bower_components/foundation-sites/dist/foundation.js"></script>
+<script src="js/jquery.showmore.src.js" type="text/javascript"></script>
+<script src="js/app.js"></script>
+<script src="layerslider/js/greensock.js" type="text/javascript"></script>
+<!-- LayerSlider script files -->
+<script src="layerslider/js/layerslider.transitions.js" type="text/javascript"></script>
+<script src="layerslider/js/layerslider.kreaturamedia.jquery.js" type="text/javascript"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/inewsticker.js" type="text/javascript"></script>
+<script src="js/jquery.kyco.easyshare.js" type="text/javascript"></script>
+</body>
+</html>

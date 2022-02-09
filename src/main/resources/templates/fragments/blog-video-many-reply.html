@@ -1,0 +1,85 @@
+<!doctype html>
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+
+
+<div th:fragment="blogVideoManyReply(videoBlogReplyList)">
+	
+	<div th:each="videoBlogReplyReply:${videoBlogReplyList}" class="media-object stack-for-small reply-comment">
+		<div class="media-object-section comment-img text-center">
+			<div class="comment-box-img">
+				<img th:src="|upload/${videoBlogReplyReply.user.headImage}|" alt="comment">
+			</div>
+		</div>
+		<div class="media-object-section comment-desc">
+			<div class="comment-title">
+				<span class="name">
+					<a th:href="|/findUserAboutMeById?id=${videoBlogReplyReply.user.id}|" th:text="${videoBlogReplyReply.user.displayName}">Joseph John</a>
+					Said:
+				</span>
+				<span class="time float-right">
+					<i class="fa fa-clock-o"></i>
+					<span th:text="${#stringUtils.displayTime(videoBlogReplyReply.commentTime)}">1 minute ago</span>
+				</span>
+			</div>
+			<div class="comment-text">
+				<p th:text="${videoBlogReplyReply.commentContent}">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventoresunt explicabo.</p>
+				<blockquote th:text="|回复 ${videoBlogReplyReply.replyWhatReply.user.displayName} : ${videoBlogReplyReply.replyWhatReply.commentContent}|" style="padding: 0 1.25rem 0 1.875rem;border-left: 4px solid #cacaca;font-size: 13px"></blockquote>
+			</div>
+			<div class="comment-btns">
+				<!-- 添加大回复的回复 -->
+				<!--<span><a href="#"><i class="fa fa-thumbs-o-up"></i></a> | <a href="#"><i class="fa fa-thumbs-o-down"></i></a></span>-->
+				<span>
+					<a th:if="!${#setUtils.hasUser(videoBlogReplyReply.agreeVideoBlogCommentUsers, session.user)}" href="javascript:;" th:onclick="videoBlogCommentAgree([[${videoBlogReplyReply.id}]])">
+						<i th:id="|agreei${videoBlogReplyReply.id}|" th:text="| ${videoBlogReplyReply.agreeVideoBlogCommentUsers.size()}|" class="fa fa-thumbs-o-up"></i>
+					</a>
+					<a th:if="${#setUtils.hasUser(videoBlogReplyReply.agreeVideoBlogCommentUsers, session.user)}" href="javascript:;" th:onclick="videoBlogCommentAgree([[${videoBlogReplyReply.id}]])">
+						<i th:id="|agreei${videoBlogReplyReply.id}|" th:text="| ${videoBlogReplyReply.agreeVideoBlogCommentUsers.size()}|" class="fa fa-thumbs-up"></i>
+					</a>
+					|
+					<a th:if="!${#setUtils.hasUser(videoBlogReplyReply.disagreeVideoBlogCommentUsers, session.user)}" href="javascript:;" th:onclick="videoBlogCommentDisagree([[${videoBlogReplyReply.id}]])">
+						<i th:id="|disagreei${videoBlogReplyReply.id}|" th:text="| ${videoBlogReplyReply.disagreeVideoBlogCommentUsers.size()}|" class="fa fa-thumbs-o-down"></i>
+					</a>
+					<a th:if="${#setUtils.hasUser(videoBlogReplyReply.disagreeVideoBlogCommentUsers, session.user)}" href="javascript:;" th:onclick="videoBlogCommentDisagree([[${videoBlogReplyReply.id}]])">
+						<i th:id="|disagreei${videoBlogReplyReply.id}|" th:text="| ${videoBlogReplyReply.disagreeVideoBlogCommentUsers.size()}|" class="fa fa-thumbs-down"></i>
+					</a>
+				</span>
+				<span><a href="javascript:;" th:onclick='videoReplyReplyClick([[${videoBlogReplyReply.id}]])'><i class="fa fa-share"></i>Reply</a></span>
+				<span class='reply float-right hide-reply'></span>
+			</div>
+			
+			<div th:id="${videoBlogReplyReply.id}" class="comment-box thumb-border" hidden>
+				<div class="media-object stack-for-small">
+					<div class="media-object-section comment-img text-center">
+						<div class="comment-box-img">
+							<img th:src="|upload/${session.user.headImage}|" alt="comment">
+						</div>
+						<h6><a target="_blank" th:href="|/findUserAboutMeById?id=${session.user.id}|" th:text="${session.user.displayName}">Joseph John</a></h6>
+					</div>
+					<div class="media-object-section comment-textarea">
+						<!-- 回复哪一个评论 -->
+						<input th:id="|videoReplyReplyInput${videoBlogReplyReply.id}|" hidden="hidden">
+						<textarea th:id="|videoReplyReplyTextarea${videoBlogReplyReply.id}|" name="commentText" placeholder="Add a comment here.."></textarea>
+						<input th:onclick="videoReplyReplySend([[${videoBlogReplyReply.id}]])" type="submit" name="submit" value="send">
+					
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:id="|videoBlogReplyDiv${videoBlogReplyReply.id}|"></div>
+		
+		<!--<div th:unless="${#arrayListUtils.isEmpty(videoBlogReplyReply.replyCommentList)}" th:include="this::blogVideoManyReply(${videoBlogReplyReply.replyCommentList})"></div>-->
+		<div th:if="!${videoBlogReplyReply.replyCommentList.isEmpty()}" th:include="this::blogVideoManyReply(${videoBlogReplyReply.replyCommentList})"></div>
+		
+	</div>
+</div>
+
+
+</body>
+</html>

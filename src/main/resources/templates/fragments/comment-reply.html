@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>BeTube video</title>
+	<link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" href="css/theme.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="layerslider/css/layerslider.css">
+	<link rel="stylesheet" href="css/owl.carousel.min.css">
+	<link rel="stylesheet" href="css/owl.theme.default.min.css">
+	<link rel="stylesheet" href="css/jquery.kyco.easyshare.css">
+	<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+		<!-- Comments -->
+		<section th:fragment="commentReply" class="content comments">
+			<div class="row secBg">
+				<div class="large-12 columns">
+					<div class="main-heading borderBottom">
+						<div class="row padding-14">
+							<div class="medium-12 small-12 columns">
+								<div class="head-title">
+									<i class="fa fa-comments"></i>
+									<h4>Comments (<span id="commentNum" th:text="${videoBlogCommentList.size()}">4</span>)</h4>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="comment-box thumb-border">
+						<div class="media-object stack-for-small">
+							<div class="media-object-section comment-img text-center">
+								<div class="comment-box-img">
+									<img th:src="|upload/${session.user.headImage}|" alt="comment">
+								</div>
+								<h6><a target="_blank" th:href="'/findUserAboutMeById?id='+${session.user.id}" th:text="${session.user.displayName}">Joseph John</a></h6>
+							</div>
+							<div class="media-object-section comment-textarea">
+								
+								<textarea id="videoCommentTextarea" name="commentText" placeholder="Add a comment here.."></textarea>
+								<input onclick="videoCommentSend()" type="submit" name="submit" value="send">
+							
+							</div>
+						</div>
+					</div>
+					
+					<div class="comment-sort text-right">
+						<span>Sort By : <a href="#">newest</a> | <a href="#">oldest</a></span>
+					</div>
+					
+					<!-- main comment -->
+					<div class="main-comment showmore_one">
+						<div id="addCommentId"></div>
+						
+						<div th:each="videoBlogComment:${videoBlogCommentList}" class="media-object stack-for-small">
+							<div class="media-object-section comment-img text-center">
+								<div class="comment-box-img">
+									<img th:src="|upload/${videoBlogComment.user.headImage}|" alt="comment">
+								</div>
+							</div>
+							<div class="media-object-section comment-desc">
+								<div class="comment-title">
+									<span class="name">
+										<a target="_blank" th:href="'/findUserAboutMeById?id='+${videoBlogComment.user.id}" th:text="${videoBlogComment.user.displayName}">Joseph John</a>
+										Said:
+									</span>
+									<span class="time float-right">
+										<i class="fa fa-clock-o"></i>
+										<span th:text="${#stringUtils.displayTime(videoBlogComment.commentTime)}">1 minute ago</span>
+									</span>
+								</div>
+								<div class="comment-text">
+									<p th:text="${videoBlogComment.commentContent}">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventoresunt explicabo.</p>
+								</div>
+								<div class="comment-btns">
+									<span>
+										<a th:if="!${#setUtils.hasUser(videoBlogComment.agreeVideoBlogCommentUsers, session.user)}" href="javascript:;" th:onclick="videoBlogCommentAgree([[${videoBlogComment.id}]])">
+											<i th:id="|agreei${videoBlogComment.id}|" th:text="| ${videoBlogComment.agreeVideoBlogCommentUsers.size()}|" class="fa fa-thumbs-o-up"></i>
+										</a>
+										<a th:if="${#setUtils.hasUser(videoBlogComment.agreeVideoBlogCommentUsers, session.user)}" href="javascript:;" th:onclick="videoBlogCommentAgree([[${videoBlogComment.id}]])">
+											<i th:id="|agreei${videoBlogComment.id}|" th:text="| ${videoBlogComment.agreeVideoBlogCommentUsers.size()}|" class="fa fa-thumbs-up"></i>
+										</a>
+										|
+										<a th:if="!${#setUtils.hasUser(videoBlogComment.disagreeVideoBlogCommentUsers, session.user)}" href="javascript:;" th:onclick="videoBlogCommentDisagree([[${videoBlogComment.id}]])">
+											<i th:id="|disagreei${videoBlogComment.id}|" th:text="| ${videoBlogComment.disagreeVideoBlogCommentUsers.size()}|" class="fa fa-thumbs-o-down"></i>
+										</a>
+										<a th:if="${#setUtils.hasUser(videoBlogComment.disagreeVideoBlogCommentUsers, session.user)}" href="javascript:;" th:onclick="videoBlogCommentDisagree([[${videoBlogComment.id}]])">
+											<i th:id="|disagreei${videoBlogComment.id}|" th:text="| ${videoBlogComment.disagreeVideoBlogCommentUsers.size()}|" class="fa fa-thumbs-down"></i>
+										</a>
+									</span>
+									<span><a href="javascript:;" th:onclick="videoReplyClick([[${videoBlogComment.id}]])"><i class="fa fa-share"></i>Reply</a></span>
+									<span class='reply float-right hide-reply'></span>
+								</div>
+								
+								<div th:id="${videoBlogComment.id}" class="comment-box thumb-border" hidden>
+									<div class="media-object stack-for-small">
+										<div class="media-object-section comment-img text-center">
+											<div class="comment-box-img">
+												<img th:src="|upload/${session.user.headImage}|" alt="comment">
+											</div>
+											<h6><a target="_blank" th:href="'/findUserAboutMeById?id='+${session.user.id}" th:text="${session.user.displayName}">Joseph John</a></h6>
+										</div>
+										<div class="media-object-section comment-textarea">
+											<!-- 回复哪一个评论 -->
+											<input th:id="|videoReplyInput${videoBlogComment.id}|" hidden="hidden">
+											<textarea th:id="|videoReplyTextarea${videoBlogComment.id}|" name="commentText" placeholder="Add a comment here.."></textarea>
+											<input th:onclick="videoReplySend([[${videoBlogComment.id}]])" type="submit" name="submit" value="send">
+										
+										</div>
+									</div>
+								</div>
+								
+								<!-------------------->
+								<div th:id="|subComment${videoBlogComment.id}|"></div>
+								
+								<!-- 评论的回复 -->
+								<div th:each="videoBlogReply:${videoBlogComment.replyCommentList}" class="media-object stack-for-small reply-comment">
+									<div  class="media-object-section comment-img text-center">
+										<div class="comment-box-img">
+											<img th:src="|upload/${videoBlogReply.user.headImage}|" alt="comment">
+										</div>
+									</div>
+									<div class="media-object-section comment-desc">
+										<div class="comment-title">
+														<span class="name">
+															<a target="_blank" th:href="'/findUserAboutMeById?id='+${videoBlogReply.user.id}" th:text="${videoBlogReply.user.displayName}">Joseph John</a>
+															Said:
+														</span>
+											<span class="time float-right">
+															<i class="fa fa-clock-o"></i>
+															<span th:text="${#stringUtils.displayTime(videoBlogReply.commentTime)}">1 minute ago</span>
+														</span>
+										</div>
+										<div class="comment-text">
+											<p th:text="${videoBlogReply.commentContent}">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventoresunt explicabo.</p>
+										</div>
+										<div class="comment-btns">
+											<!--<span><a href="#"><i class="fa fa-thumbs-o-up"></i></a> | <a href="#"><i class="fa fa-thumbs-o-down"></i></a></span>-->
+											<span>
+															<a th:if="!${#setUtils.hasUser(videoBlogReply.agreeVideoBlogCommentUsers, session.user)}" href="javascript:;" th:onclick="videoBlogCommentAgree([[${videoBlogReply.id}]])">
+																<i th:id="|agreei${videoBlogReply.id}|" th:text="| ${videoBlogReply.agreeVideoBlogCommentUsers.size()}|" class="fa fa-thumbs-o-up"></i>
+															</a>
+															<a th:if="${#setUtils.hasUser(videoBlogReply.agreeVideoBlogCommentUsers, session.user)}" href="javascript:;" th:onclick="videoBlogCommentAgree([[${videoBlogReply.id}]])">
+																<i th:id="|agreei${videoBlogReply.id}|" th:text="| ${videoBlogReply.agreeVideoBlogCommentUsers.size()}|" class="fa fa-thumbs-up"></i>
+															</a>
+															|
+															<a th:if="!${#setUtils.hasUser(videoBlogReply.disagreeVideoBlogCommentUsers, session.user)}" href="javascript:;" th:onclick="videoBlogCommentDisagree([[${videoBlogReply.id}]])">
+																<i th:id="|disagreei${videoBlogReply.id}|" th:text="| ${videoBlogReply.disagreeVideoBlogCommentUsers.size()}|" class="fa fa-thumbs-o-down"></i>
+															</a>
+															<a th:if="${#setUtils.hasUser(videoBlogReply.disagreeVideoBlogCommentUsers, session.user)}" href="javascript:;" th:onclick="videoBlogCommentDisagree([[${videoBlogReply.id}]])">
+																<i th:id="|disagreei${videoBlogReply.id}|" th:text="| ${videoBlogReply.disagreeVideoBlogCommentUsers.size()}|" class="fa fa-thumbs-down"></i>
+															</a>
+														</span>
+											
+											<span><a href="javascript:;" th:onclick='videoReplyReplyClick([[${videoBlogReply.id}]])'><i class="fa fa-share"></i>Reply</a></span>
+											<span class='reply float-right hide-reply'></span>
+										</div>
+										
+										<div th:id="${videoBlogReply.id}" class="comment-box thumb-border" hidden>
+											<div class="media-object stack-for-small">
+												<div class="media-object-section comment-img text-center">
+													<div class="comment-box-img">
+														<img th:src="|upload/${session.user.headImage}|" alt="comment">
+													</div>
+													<h6><a target="_blank" th:href="'/findUserAboutMeById?id='+${session.user.id}" th:text="${session.user.displayName}">Joseph John</a></h6>
+												</div>
+												<div class="media-object-section comment-textarea">
+													<!-- 回复哪一个评论 -->
+													<input th:id="|videoReplyReplyInput${videoBlogReply.id}|" hidden="hidden">
+													<textarea th:id="|videoReplyReplyTextarea${videoBlogReply.id}|" name="commentText" placeholder="Add a comment here.."></textarea>
+													<input th:onclick="videoReplyReplySend([[${videoBlogReply.id}]])" type="submit" name="submit" value="send">
+												
+												</div>
+											</div>
+										</div>
+									</div>
+									<!----------------------------------------->
+									<div th:id="|videoBlogReplyDiv${videoBlogReply.id}|"></div>
+									<!-- 回复的回复 -->
+									
+									<!--<th:block th:unless="${#arrayListUtils.isEmpty(videoBlogReply.replyCommentList)}" th:include="~{fragments/blog-video-many-reply::blogVideoManyReply(${videoBlogReply.replyCommentList})}"></th:block>-->
+									<th:block th:if="${!videoBlogReply.replyCommentList.isEmpty()}" th:include="~{fragments/blog-video-many-reply::blogVideoManyReply(${videoBlogReply.replyCommentList})}"></th:block>
+								
+								</div><!-- end sub comment -->
+							
+							</div>
+						</div>
+						
+						
+					</div><!-- End main comment -->
+				
+				</div>
+			</div>
+		</section><!-- End Comments -->
+
+
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/what-input/what-input.js"></script>
+<script src="bower_components/foundation-sites/dist/foundation.js"></script>
+<script src="js/jquery.showmore.src.js" type="text/javascript"></script>
+<script src="js/app.js"></script>
+<script src="layerslider/js/greensock.js" type="text/javascript"></script>
+<!-- LayerSlider script files -->
+<script src="layerslider/js/layerslider.transitions.js" type="text/javascript"></script>
+<script src="layerslider/js/layerslider.kreaturamedia.jquery.js" type="text/javascript"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/inewsticker.js" type="text/javascript"></script>
+<script src="js/jquery.kyco.easyshare.js" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!doctype html>
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeTube video</title>
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="layerslider/css/layerslider.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/jquery.kyco.easyshare.css">
+    <link rel="stylesheet" href="css/responsive.css">
+	
+	<!-- 标签 -->
+	<link rel="stylesheet" type="text/css" href="css/css.css"/>
+	
+	<!-- 富文本 -->
+	<link rel="stylesheet" href="js/bootstrap3.3.5.css">
+	<link href="dist/summernote.css" rel="stylesheet" />
+	
+	<script src="js/jquery.js"></script>
+	<script src="js/bootstrap3.3.5.js"></script>
+	<script src="dist/summernote.js"></script>
+	<!-- 中文-->
+	<script src="dist/lang/summernote-zh-CN.js"></script>
+	
+	<!-- 腾讯云点播 -->
+	<script src="https://cdn-go.cn/cdn/vod-js-sdk-v6/latest/vod-js-sdk-v6.js"></script>
+	
+	<!-- 进度条核心样式 -->
+	<link rel="stylesheet" type="text/css" href="css/an-skill-bar.css">
+
+	<!-- 初始化summernote -->
+	<script>
+        $(function(){
+
+            // 引入表情库
+            var emojis;
+            var emojiUrls;
+            $.ajax({
+                url:'https://api.github.com/emojis',
+                async:false
+            }).then(function (data) {
+                // 赋值
+                emojis = Object.keys(data);
+                emojiUrls = data;
+            })
+            
+            $('.summernote').summernote({
+                height: 200,
+                tabsize: 2,
+                lang: 'zh-CN',
+				callbacks:{
+                    onImageUpload:function (files) {
+						layer.msg("描述不能上传图片！")
+                    }
+				},
+                // 处理表情
+                hint:{
+                    // 检验：
+                    match: /:([\-+\w]+)$/,
+                    // 当我们输入某个字符的时候，查找对应的模板
+                    search: function (keyword, callback) {
+                        // 在整个emojis中过滤带有keyword中的数据
+                        // 当前迭代的数组元素，当前迭代元素在数组中的索引
+                        callback($.grep(emojis, function (item) {
+                            return item.indexOf(keyword) === 0;
+                        }))
+                    },
+                    // 表情是从网上获得的，所以去网上加载
+                    template:function (item) {
+                        var content = emojiUrls[item];
+                        return '<img src="'+content+'"width="20"/>:'+item+':';
+                    },
+                    // 选中后将制定模板的内容添加到我们的富文本框中
+                    content:function (item) {
+                        var url = emojiUrls[item];
+                        if (url) {
+                            return $('<img/>').attr('src', url).css('width',20)[0];
+                        }
+                        return '';
+                    }
+                }
+            });
+        });
+	</script>
+	
+	
+	<style>
+		.note-editor p {
+			font-size: 20px;
+			line-height: 1;
+			margin-bottom: 1rem;
+			text-rendering: optimizeLegibility;
+			color: black !important;
+		}
+	</style>
+	
+	
+
+</head>
+<body>
+<div class="off-canvas-wrapper">
+    <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+		<!--header-->
+		<div th:replace="~{fragments/header::header}"></div>
+	
+		<!-- End Header -->
+            <!--breadcrumbs-->
+            <section id="breadcrumb">
+                <div class="row">
+                    <div class="large-12 columns">
+                        <nav aria-label="You are here:" role="navigation">
+                            <ul class="breadcrumbs">
+                                <li><i class="fa fa-home"></i><a href="#">Home</a></li>
+                                <li><a href="#">profile</a></li>
+                                <li>
+                                    <span class="show-for-sr">Current: </span> submit post
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </section><!--end breadcrumbs-->
+
+            <!-- profile top section -->
+            <section class="topProfile topProfile-inner" th:style="|background: url('/upload/${session.user.coverImage}') no-repeat;|">
+                <div class="main-text">
+                    <div class="row">
+                        <div class="large-12 columns">
+                            <h3>World’s Biggest</h3>
+                            <h1>Powerfull Video Theme</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-stats">
+					<div th:replace="~{/fragments/user-bar::userBar}"></div>
+                </div>
+            </section><!-- End profile top section -->
+            <div class="row">
+				<!-- left sidebar -->
+				<div class="large-4 columns">
+					<div th:replace="~{fragments/profile::profile}"></div>
+				</div><!-- end sidebar -->
+                <!-- right side content area -->
+                <div class="large-8 columns profile-inner">
+                    <!-- profile settings -->
+                    <section class="submit-post">
+                        <div class="row secBg">
+                            <div class="large-12 columns">
+                                <div class="heading">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                    <h4>Add new video post</h4>
+                                </div>
+                                <div class="row">
+                                    <div class="large-12 columns">
+
+                                        <form th:action="@{~/saveVideo}" method="post" data-abide novalidate>
+                                            <div data-abide-error class="alert callout" style="display: none;">
+                                                <p><i class="fa fa-exclamation-triangle"></i>
+                                                    There are some errors in your form.</p>
+                                            </div>
+                                            <div class="row">
+                                                <div class="large-12 columns">
+                                                    <label>Title
+                                                        <input name="title" type="text" placeholder="enter you video title..." required>
+                                                        <span class="form-error">
+                                                            Yo, you had better fill this out, it's required.
+                                                        </span>
+                                                    </label>
+                                                </div>
+												<div class="large-12 columns post-meta">
+													<label>Meta keywords:
+														<textarea name="keyword" placeholder="enter meta keywords"></textarea>
+													</label>
+													<p>IF you want to put your custom meta Keywords then put here otherwise your post Keywords will be the default meta Keywords</p>
+												</div>
+                                                <div class="large-12 columns">
+                                                    <label>Description
+                                                    
+                                                    </label>
+													<!-- 富文本 -->
+													<div class="summernote"></div>
+													<textarea id="contentTextarea" name="content" hidden></textarea>
+                                                </div>
+                                                <div class="large-12 columns">
+                                                    <h6 class="borderBottom">Choose Video File And Cover:</h6>
+                                                    <!--<p><strong>Note:</strong> Please choose one of the following ways to embed the video into your post, the video is determined in the order: Video Code > Video URL > Video File.</p>-->
+                                                </div>
+                                               <!-- <div class="large-12 columns">
+                                                    <div class="radio">
+                                                       <input type="radio" value="check" name="videolink" id="videolink1" checked>
+                                                       <label class="customLabel" for="videolink1">Video Link From Youtube/Vimeo etc..</label>
+                                                       <input type="radio" value="check" name="videolink" id="videolink2">
+                                                       <label class="customLabel" for="videolink2">Custom Video Upload / Put custom Video URL </label>
+                                                       <input type="radio" value="check" name="videolink" id="videolink3">
+                                                       <label class="customLabel" for="videolink3">Embed/Object Code</label>
+                                                    </div>
+                                                </div>-->
+                                                <div class="large-12 columns">
+                                                    <!--<label>Put here your video url with proper extension:
+                                                        <input type="url" placeholder="for example:http://yoursite.com/sample-video.mp4">
+                                                    </label>
+                                                    <h6>OR</h6>-->
+                                                    <div class="upload-video" style="margin-bottom: 20px;">
+                                                        <label for="videoUpload" class="button">Upload File</label>
+                                                        <input onchange="videoFileChange(this)" type="file" id="videoUpload" required class="show-for-sr">
+                                                        <span id="videoFileSpan">No file chosen</span>
+                                                    </div>
+													<br>
+                                                    <div class="upload-video" style="margin-bottom: 20px;">
+                                                        <label for="imgUpload" class="button">Upload Cover</label>
+                                                        <input onchange="coverFileChange(this)" type="file" id="imgUpload" required class="show-for-sr">
+                                                        <span id="videoCoverFileSpan">No cover chosen</span>
+                                                    </div>
+													<br>
+													<a href="javascript:;" onclick="uploadVOD()" style="background:#4b4e7c;border-bottom: 3px none #88CCFF; margin-bottom: 12px; text-decoration: none" class="button">
+														Upload Video
+													</a>
+													<div class="skillbar css">
+														<!--<span class="title"></i> CSS</span>-->
+														<span id="progressSpan" class="percent">0%</span>
+														<div id="progressDiv" class="filled" data-width="0%"></div>
+													</div>
+													<!--<p class="extraMargin">Please upload the appropriate blog cover recommendation 770*370</p>-->
+                                                </div>
+	
+												<input id="videoUrl" name="videoUrl" type="text" required hidden>
+												<input id="videoFileId" name="videoFileId" type="text" required hidden>
+												<input id="coverImage" name="coverImage" type="text" required hidden>
+												
+                                                <div class="large-12 columns">
+													
+                                                    <div class="post-category">
+                                                        <label>Choose Video Category:
+                                                            <select>
+                                                                <option th:onclick="categoryClick([[${#setUtils.getSubCategory(category.subCategories)}]], [[${category.id}]])" th:each="category:${categoryList}" th:text="${category.category}" th:value="${category.category}">one</option>
+                                                            </select>
+															
+															<input name="categoryId" id="categoryIdInput" type="text" required hidden>
+
+                                                        </label>
+													</div>
+                                                    <div class="post-category">
+                                                        <label>Choose Video Sub-Category:
+                                                            <select id="subCategoryId">
+                                                                <option value="">one</option>
+                                                                <option value="">two</option>
+                                                                <option value="">three</option>
+                                                            </select>
+	
+															<input name="subCategoryId" id="subCategoryIdInput" type="text" required hidden>
+															
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="large-12 columns">
+													<label>Tags:
+														<!-- 英文,隔开 -->
+														<input name="tagsinput" id="tagsinputval" class="tagsinput" data-role="tagsinput" placeholder="输入后回车"/>
+													</label>
+                                                </div>
+                                                <div class="large-12 columns">
+                                                    <button class="button expanded" type="button" onclick="MySubmit()" style="margin: 20px 0 50px 0;background: #61ca37;border-bottom: 3px solid #53ac2f;">publish now</button>
+                                                	<button id="submitButton" type="submit" hidden></button>
+												</div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section><!-- End profile settings -->
+                </div><!-- end left side content area -->
+            </div>
+	
+		<!-- footer -->
+		<div th:replace="~{fragments/footer::footer}"></div>
+		<!-- footer -->
+        </div><!--end off canvas content-->
+    </div><!--end off canvas wrapper inner-->
+</div><!--end off canvas wrapper-->
+
+<!-- 进度条js -->
+<script src="js/an-skill-bar.js"></script>
+<script src="js/main.js"></script>
+
+<script type="text/javascript" th:inline="javascript">
+	
+	// 表单提交
+	function MySubmit() {
+		
+	    var markup = $(".summernote").summernote('code');
+        // console.log(markup);
+		$("#contentTextarea").text(markup);
+		$("#submitButton").click();
+    }
+	
+	// 视频上传
+    function getSignature() {
+        var sign;
+        
+        $.ajax({
+			url:[[@{~/videoSign}]],
+			async:false,
+			type:"POST",
+			success: function (result) {
+			    // alert(result.signature);
+			    sign = result;
+        	}
+		})
+		return sign;
+    };
+	
+    // 获得签名
+    const tcVod = new TcVod.default({
+        getSignature: getSignature // 前文中所述的获取上传签名的函数
+    });
+    
+    var mediaFile;
+    var coverFile;
+    
+    function videoFileChange(e) {
+		// 获取上传的视频文件
+		mediaFile = e.files[0];
+		$("#videoFileSpan").text(e.files[0].name);
+    }
+
+    function coverFileChange(e) {
+		// 获取上传的视频封面文件
+        coverFile = e.files[0];
+        $("#videoCoverFileSpan").text(e.files[0].name)
+    }
+	
+    // 上传视频
+    function uploadVOD() {
+        // 上传
+        const uploader = tcVod.upload({
+            mediaFile: mediaFile,
+            coverFile: coverFile,
+        });
+
+        uploader.done().then(function (doneResult) {
+			// deal with doneResult
+            console.log(doneResult);
+            $("#videoUrl").val(doneResult.video.url);
+            $("#coverImage").val(doneResult.cover.url);
+            $("#videoFileId").val(doneResult.fileId);
+            
+            $("#progressSpan").text("100%");
+            $("#progressDiv").width("100%");
+            layer.msg("上传成功")
+  /*          console.log(doneResult.video.url);
+            console.log(doneResult.cover.url);
+            console.log(doneResult.fileId);*/
+        });
+        // 视频上传完成时
+        uploader.on('media_upload', function(info) {
+            // uploaderInfo.isVideoUploadSuccess = true;
+        	// alert("success")
+            // console.log(info);
+        });
+        
+        // 视频上传进度
+        uploader.on('media_progress', function(info) {
+            // uploaderInfo.progress = info.percent;
+			var progress = info.percent * 100 + "%";
+            // console.log(progress);
+			
+			$("#progressSpan").text(progress);
+			$("#progressDiv").width(progress);
+        });
+    }
+   
+
+    
+	
+ 
+	function categoryClick(str, id) {
+        // console.log(str);
+        // 删除二级选项的节点
+		var subCategoryId = document.getElementById("subCategoryId")
+		var childs = subCategoryId.childNodes;
+
+        for (var i = childs.length - 1; i > 0; i--) {
+			subCategoryId.removeChild(childs[i]);
+        }
+        // 9,Other|5,Interesting Popular Science Humanities|7,Speech|6,Wild Technology Association|8,Mechanics
+        // 添加节点
+		var subCategory = new Array();
+        subCategory = str.split("|");
+        for (var i = 0; i < subCategory.length; i++) {
+			
+            var idList = new Array();
+            idList = subCategory[i].split(",");
+            if (i == 0) {
+                $("#subCategoryIdInput").val(idList[0]);
+            }
+        
+            var option = document.createElement("option");
+            option.innerHTML = idList[1];
+            option.setAttribute("onclick", "subCategoryClick("+idList[0]+")");
+            subCategoryId.appendChild(option);
+            
+        }
+        $("#categoryIdInput").val(id);
+        
+    }
+
+    function subCategoryClick(id) {
+        // 给subcategoryinput 赋值
+        $("#subCategoryIdInput").val(id)
+    }
+	
+</script>
+<!-- 标签 -->
+<script src="js/tagsinput.js" type="text/javascript" charset="utf-8"></script>
+<!-- Cropper -->
+<script src="js/cropper.js"></script>
+<script src="layer/layer.js"></script>
+<!-- script files -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/what-input/what-input.js"></script>
+<script src="bower_components/foundation-sites/dist/foundation.js"></script>
+<script src="js/jquery.showmore.src.js" type="text/javascript"></script>
+<script src="js/app.js"></script>
+<script src="layerslider/js/greensock.js" type="text/javascript"></script>
+<!-- LayerSlider script files -->
+<script src="layerslider/js/layerslider.transitions.js" type="text/javascript"></script>
+<script src="layerslider/js/layerslider.kreaturamedia.jquery.js" type="text/javascript"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/inewsticker.js" type="text/javascript"></script>
+<script src="js/jquery.kyco.easyshare.js" type="text/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!doctype html>
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeTube video</title>
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="layerslider/css/layerslider.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/jquery.kyco.easyshare.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+</head>
+<body>
+<div class="off-canvas-wrapper">
+    <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+		<!--header-->
+		<div th:replace="~{fragments/header::header}"></div>
+	
+		<!-- End Header -->
+            <!--breadcrumbs-->
+            <section id="breadcrumb">
+                <div class="row">
+                    <div class="large-12 columns">
+                        <nav aria-label="You are here:" role="navigation">
+                            <ul class="breadcrumbs">
+                                <li><i class="fa fa-home"></i><a href="index.html">Home</a></li>
+                                <li><a href="profile-page-v2.html">profile</a></li>
+                                <li>
+                                    <span class="show-for-sr">Current: </span> comments
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </section><!--end breadcrumbs-->
+
+            <!-- profile top section -->
+            <section class="topProfile" th:style="|background: url('/upload/${session.user.coverImage}') no-repeat;|">
+                <div class="main-text text-center">
+                    <div class="row">
+                        <div class="large-12 columns">
+                            <h3>World’s Biggest</h3>
+                            <h1>Powerfull Video Theme</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-stats">
+					<div th:replace="~{/fragments/user-bar::userBar}"></div>
+                </div>
+            </section><!-- End profile top section -->
+            <div class="row">
+				<!-- left sidebar -->
+				<div class="large-4 columns">
+					<div th:replace="~{fragments/profile::profile}"></div>
+				</div><!-- end sidebar -->
+                <!-- right side content area -->
+                <div class="large-8 columns profile-inner">
+                    <!-- Comments -->
+                    <section class="content comments">
+                        <div class="row secBg">
+                            <div class="large-12 columns">
+                                <div class="main-heading borderBottom">
+                                    <div class="row padding-14">
+                                        <div class="medium-12 small-12 columns">
+                                            <div class="head-title">
+                                                <i class="fa fa-comments"></i>
+                                                <h4 th:text="|Comments (${commentList.size()})|"></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="comment-box thumb-border">
+                                    <div class="media-object stack-for-small">
+                                        <div class="media-object-section comment-img text-center">
+                                            <div class="comment-box-img">
+                                                <img th:src="|upload/${session.user.headImage}|" alt="comment">
+                                            </div>
+                                            <h6><a th:href="'/findUserAboutMeById?id='+${session.user.id}" th:text="${session.user.displayName}">Joseph John</a></h6>
+                                        </div>
+										<!-- 发评论， 默认 -->
+                                        <div th:if="${commentReply} eq 'comment'" class="media-object-section comment-textarea">
+                                            <div style="font-size: 12px">
+												<span style="font-size: 12px;color: #444444; font-weight: bold;" class="name">
+													Comments to :
+													<a th:if="${replyCOrRObject} ne null" th:text="${replyCOrRObject.user.displayName}">白篱</a>
+													<a th:if="${replyCOrRObject} eq null" th:text="${user.displayName}">白篱</a>
+												</span>
+												<span style="color: #aaaaaa"> Said:</span>
+											</div>
+											
+											<form method="post" th:action="@{~/saveComment}">
+                                                <textarea th:name="commentContent" style="max-width: 631px; min-width: 631px" name="commentText" placeholder="Add a comment here.."></textarea>
+												<input type="text" name="userId" th:value="${user.id}" style="display: none">
+                                                <input type="submit" name="submit" value="send">
+                                            </form>
+                                        </div>
+										
+										<!-- 发回复 -->
+                                        <div th:if="${commentReply} eq 'reply'" class="media-object-section comment-textarea">
+                                            <div style="font-size: 12px">
+												<span style="font-size: 12px;color: #444444; font-weight: bold;" class="name">
+													Reply to :
+													<a th:if="${replyCOrRObject} ne null" th:text="${replyCOrRObject.user.displayName}">白篱</a>
+													<a th:if="${replyCOrRObject} eq null" th:text="${user.displayName}">白篱</a>
+												</span>
+												<span style="color: #aaaaaa"> Said:</span>
+											</div>
+											
+											<form method="post" th:action="@{~/saveReply}">
+                                                <textarea th:name="replyContent" style="max-width: 631px; min-width: 631px" name="commentText" placeholder="Add a comment here.."></textarea>
+												<input type="text" name="userId" th:value="${user.id}" style="display: none">
+												<input type="text" name="replyCOrR" th:value="${replyCOrR}" style="display: none">
+												<input type="text" name="replyCOrRId" th:value="${replyCOrRId}" style="display: none">
+                                                <input type="submit" name="submit" value="send">
+                                            </form>
+                                        </div>
+										
+                                    </div>
+                                </div>
+
+                                <div class="comment-sort text-right">
+                                    <span>Sort By : <a href="#">newest</a> | <a href="#">oldest</a></span>
+                                </div>
+
+                                <!-- main comment -->
+                                <div class="main-comment showmore_one">
+									
+									<!--评论-->
+                                    <div th:each="comment:${commentList}" class="media-object stack-for-small">
+                                        <div class="media-object-section comment-img text-center">
+                                            <div class="comment-box-img">
+                                                <img th:src= "|upload/${comment.user.headImage}|" alt="comment">
+                                            </div>
+                                        </div>
+                                        <div class="media-object-section comment-desc">
+                                            <div class="comment-title">
+                                                <span class="name"><a th:href="'/findUserAboutMeById?id='+${comment.user.id} " th:text="${comment.user.displayName}">Joseph John</a> Said:</span>
+                                                <span th:text="${#stringUtils.displayTime(comment.commentTime)}" class="time float-right"><i class="fa fa-clock-o"></i>1 minute ago</span>
+                                            </div>
+                                            <div class="comment-text">
+                                                <p th:text="${comment.commentContent}">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventoresunt explicabo.</p>
+											</div>
+                                            <div class="comment-btns">
+                                                <span>
+													<a th:if="!${#setUtils.hasUser(comment.agreeUsers, session.user)}" th:href="'/addCommentAgree?userId='+${user.id}+'&id='+${comment.id}"><i class="fa fa-thumbs-o-up" th:text="| ${comment.agreeUsers.size()}|"></i></a>
+													<a th:if="${#setUtils.hasUser(comment.agreeUsers, session.user)}" th:href="'/deleteCommentAgree?userId='+${user.id}+'&id='+${comment.id}"><i class="fa fa-thumbs-up" th:text="| ${comment.agreeUsers.size()}|"></i></a> |
+													
+													<a th:if="!${#setUtils.hasUser(comment.disagreeUsers, session.user)}" th:href="'/addCommentDisagree?userId='+${user.id}+'&id='+${comment.id}"><i class="fa fa-thumbs-o-down" th:text="| ${comment.disagreeUsers.size()}|"></i></a>
+													<a th:if="${#setUtils.hasUser(comment.disagreeUsers, session.user)}" th:href="'/deleteCommentDisagree?userId='+${user.id}+'&id='+${comment.id}"><i class="fa fa-thumbs-down" th:text="| ${comment.disagreeUsers.size()}|"></i></a>
+												</span>
+                                                <span><a th:href="|/findUserCommentsById?id=${user.id}&replyCOrR=comment&replyCOrRId=${comment.id}|"><i class="fa fa-share"></i>Reply</a></span>
+                                                <span class='reply float-right hide-reply'></span>
+                                            </div>
+											
+											<!--回复-->
+											<div th:each="reply:${comment.replies}">
+												<div  class="media-object stack-for-small reply-comment">
+													<div class="media-object-section comment-img text-center">
+														<div class="comment-box-img">
+															<img th:src= "|upload/${reply.user.headImage}|" alt="comment">
+														</div>
+													</div>
+													<div class="media-object-section comment-desc">
+														<div class="comment-title">
+															<span class="name"><a th:href="'/findUserAboutMeById?id='+${reply.user.id}" th:text="${reply.user.displayName}">frank</a> Said:</span>
+															<span th:text="${#stringUtils.displayTime(reply.replyTime)}" class="time float-right"><i class="fa fa-clock-o"></i>1 minute ago</span>
+															<!--<span class="time float-right"><i class="fa fa-clock-o"></i>1 minute ago</span>-->
+														</div>
+														<div class="comment-text">
+															<p th:text="${reply.replyContent}">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventoresunt explicabo.</p>
+															
+														</div>
+														<div class="comment-btns">
+															<span>
+																<a th:if="!${#setUtils.hasUser(reply.agreeUsers, session.user)}" th:href="'/addReplyAgree?userId='+${user.id}+'&id='+${reply.id}"><i class="fa fa-thumbs-o-up" th:text="| ${reply.agreeUsers.size()}|"></i></a>
+																<a th:if="${#setUtils.hasUser(reply.agreeUsers, session.user)}" th:href="'/deleteReplyAgree?userId='+${user.id}+'&id='+${reply.id}"><i class="fa fa-thumbs-up" th:text="| ${reply.agreeUsers.size()}|"></i></a> |
+																<a th:if="!${#setUtils.hasUser(reply.disagreeUsers, session.user)}" th:href="'/addReplyDisagree?userId='+${user.id}+'&id='+${reply.id}"><i class="fa fa-thumbs-o-down" th:text="| ${reply.disagreeUsers.size()}|"></i></a>
+																<a th:if="${#setUtils.hasUser(reply.disagreeUsers, session.user)}" th:href="'/deleteReplyDisagree?userId='+${user.id}+'&id='+${reply.id}"><i class="fa fa-thumbs-down" th:text="| ${reply.disagreeUsers.size()}|"></i></a>
+															</span>
+															<span><a th:href="|/findUserCommentsById?id=${user.id}&replyCOrR=reply&replyCOrRId=${reply.id}|"><i class="fa fa-share"></i>Reply</a></span>
+															<span class='reply float-right hide-reply'></span>
+														</div>
+			
+													</div>
+												</div>
+											
+												<!--回复的回复-->
+												<div th:each="replyReply:${reply.replies}" class="media-object stack-for-small reply-comment">
+													<div class="media-object-section comment-img text-center">
+														<div class="comment-box-img">
+															<img th:src="|upload/${replyReply.user.headImage}|" alt="comment">
+														</div>
+													</div>
+													<div class="media-object-section comment-desc">
+														<div class="comment-title">
+															<span class="name"><a th:href="'/findUserAboutMeById?id='+${replyReply.user.id}" th:text="${replyReply.user.displayName}">Nancy John</a> Said:</span>
+															<span th:text="${#stringUtils.displayTime(replyReply.replyTime)}" class="time float-right"><i class="fa fa-clock-o"></i>1 minute ago</span>
+															<!--<span class="time float-right"><i class="fa fa-clock-o"></i>1 minute ago</span>-->
+														</div>
+														<div class="comment-text">
+															<p th:text="${replyReply.replyContent}">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventoresunt explicabo.</p>
+															<blockquote th:text="${reply.replyContent}" style="font-size: 13px;border-left: 3px solid #cacaca;color: #aaaaaa"></blockquote>
+														</div>
+														<div class="comment-btns">
+															<span>
+																<a th:if="!${#setUtils.hasUser(replyReply.agreeUsers, session.user)}" th:href="'/addReplyAgree?userId='+${user.id}+'&id='+${replyReply.id}"><i class="fa fa-thumbs-o-up" th:text="| ${replyReply.agreeUsers.size()}|"></i></a>
+																<a th:if="${#setUtils.hasUser(replyReply.agreeUsers, session.user)}" th:href="'/deleteReplyAgree?userId='+${user.id}+'&id='+${replyReply.id}"><i class="fa fa-thumbs-up" th:text="| ${replyReply.agreeUsers.size()}|"></i></a> |
+																<a th:if="!${#setUtils.hasUser(replyReply.disagreeUsers, session.user)}" th:href="'/addReplyDisagree?userId='+${user.id}+'&id='+${replyReply.id}"><i class="fa fa-thumbs-o-down" th:text="| ${replyReply.disagreeUsers.size()}|"></i></a>
+																<a th:if="${#setUtils.hasUser(replyReply.disagreeUsers, session.user)}" th:href="'/deleteReplyDisagree?userId='+${user.id}+'&id='+${replyReply.id}"><i class="fa fa-thumbs-down" th:text="| ${replyReply.disagreeUsers.size()}|"></i></a>
+															</span>
+															<!--<span><a href="#"><i class="fa fa-share"></i>Reply</a></span>-->
+															<!--<span><a th:href="|/findUserCommentsById?id=${user.id}&replyCOrR=reply&replyCOrRId=${replyReply.id}|"><i class="fa fa-share"></i>Reply</a></span>-->
+															<span class='reply float-right hide-reply'></span>
+														</div>
+													</div>
+												</div>
+												
+											</div>
+											
+											
+											
+                                        </div>
+                                    </div>
+
+                                    
+                                    </div>
+                                </div><!-- End main comment -->
+
+                            
+                        </div>
+                    </section><!-- End Comments -->
+                </div><!-- end left side content area -->
+            </div>
+	
+		<!-- footer -->
+		<div th:replace="~{fragments/footer::footer}"></div>
+		<!-- footer -->
+        </div><!--end off canvas content-->
+    </div><!--end off canvas wrapper inner-->
+</div><!--end off canvas wrapper-->
+
+<script src="js/jquery.js"></script>
+<script src="layer/layer.js"></script>
+<script type="text/javascript" th:inline="javascript">
+
+
+    // 用户关注的请求
+    function followClick(id, followId) {
+        // layer.msg(id + "  " + followId);
+
+        $.post(
+            [[@{~/addFollows}]],
+            {"id":id, "followId":followId},
+            function(data) {
+
+                if (data.success) {
+                    layer.msg("关注成功！！")
+                } else {
+                    layer.msg("自己不能关注自己。。。")
+                }
+
+            },
+            "json"
+        )
+
+    }
+
+</script>
+
+<!-- script files -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/what-input/what-input.js"></script>
+<script src="bower_components/foundation-sites/dist/foundation.js"></script>
+<script src="js/jquery.showmore.src.js" type="text/javascript"></script>
+<script src="js/app.js"></script>
+<script src="layerslider/js/greensock.js" type="text/javascript"></script>
+<!-- LayerSlider script files -->
+<script src="layerslider/js/layerslider.transitions.js" type="text/javascript"></script>
+<script src="layerslider/js/layerslider.kreaturamedia.jquery.js" type="text/javascript"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/inewsticker.js" type="text/javascript"></script>
+<script src="js/jquery.kyco.easyshare.js" type="text/javascript"></script>
+</body>
+</html>

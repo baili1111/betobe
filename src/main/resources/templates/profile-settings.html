@@ -1,0 +1,357 @@
+<!doctype html>
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeTube video</title>
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="layerslider/css/layerslider.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/jquery.kyco.easyshare.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+<div class="off-canvas-wrapper">
+    <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+		<!--header-->
+		<div th:replace="~{fragments/header::header}"></div>
+	
+		<!-- End Header -->
+            <!--breadcrumbs-->
+            <section id="breadcrumb">
+                <div class="row">
+                    <div class="large-12 columns">
+                        <nav aria-label="You are here:" role="navigation">
+                            <ul class="breadcrumbs">
+                                <li><i class="fa fa-home"></i><a href="index.html">Home</a></li>
+                                <li><a href="profile-page-v2.html">profile</a></li>
+                                <li>
+                                    <span class="show-for-sr">Current: </span> profile setting
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </section><!--end breadcrumbs-->
+
+            <!-- profile top section -->
+            <section class="topProfile topProfile-inner" th:style="|background: url('/upload/${session.user.coverImage}') no-repeat;|">
+                <div class="row">
+                    <div class="large-12 columns">
+                        <div class="upload-bg">
+							<!-- 修改用户背景按钮，如果不是登录人自己查询自己主页，不显示 -->
+                            <form th:if="${session.user.id} eq ${user.id}" action="/cropper" method="post" enctype="multipart/form-data">
+                                <label for="topfileupload" class="btn-upload"><i class="fa fa-camera"></i><span>update cover image</span></label>
+                                <input type="file" id="topfileupload" name="file" class="show-for-sr">
+								<input type="text" value="cover" name="type" style="display: none">
+								<input id="fileUploadSubmit" hidden type="submit">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="main-text">
+                    <div class="row">
+                        <div class="large-12 columns">
+                            <h3>World’s Biggest</h3>
+                            <h1>Powerfull Video Theme</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-stats">
+					<div th:replace="~{/fragments/user-bar::userBar}"></div>
+                </div>
+            </section><!-- End profile top section -->
+            <div class="row">
+				<!-- left sidebar -->
+				<div class="large-4 columns">
+					<div th:replace="~{fragments/profile::profile}"></div>
+				</div><!-- end sidebar -->
+                <!-- right side content area -->
+                <div class="large-8 columns profile-inner">
+                    <!-- profile settings -->
+                    <section class="profile-settings">
+                        <div th:if="${session.user.id} eq ${user.id}" class="row secBg">
+                            <div class="large-12 columns">
+                                <div class="heading">
+                                    <i class="fa fa-gears"></i>
+                                    <h4>profile Settings</h4>
+                                </div>
+                                <div class="row">
+                                    <div class="large-12 columns">
+                                        <div class="setting-form">
+                                            <form method="post" th:action="@{~/updateUser}" >
+                                                <div class="setting-form-inner">
+                                                    <div class="row">
+                                                        <div class="large-12 columns">
+                                                            <h6 class="borderBottom">Username Setting:</h6>
+                                                        </div>
+                                                        <div class="medium-6 columns">
+                                                            <label>First Name:
+                                                                <input name="firstName" th:value="${session.user.firstName}" type="text" placeholder="enter your first name..">
+                                                            </label>
+                                                        </div>
+                                                        <div class="medium-6 columns">
+                                                            <label>Last Name:
+                                                                <input name="lastName" th:value="${session.user.lastName}" type="text" placeholder="enter your last name..">
+                                                            </label>
+                                                        </div>
+                                                        <div class="medium-6 columns">
+                                                            <label>User Name(final):
+                                                                <input name="username" readonly th:value="${session.user.username}" type="text" placeholder="enter your username..">
+                                                            </label>
+                                                        </div>
+                                                        <div class="medium-6 columns">
+                                                            <label>Display Name:
+                                                                <input name="displayName" th:value="${session.user.displayName}" type="text" placeholder="select your display name">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="setting-form-inner">
+                                                    <div class="row">
+                                                        <div class="large-12 columns">
+                                                            <h6 class="borderBottom">Update Password:</h6>
+                                                        </div>
+                                                        <div class="medium-6 columns">
+                                                            <label>New Password:
+                                                                <input name="password" id="password" th:value="${session.user.password}" type="password" placeholder="enter your new password..">
+                                                            </label>
+                                                        </div>
+                                                        <div class="medium-6 columns">
+                                                            <label>Retype Password:
+                                                                <input id="rePassword" th:value="${session.user.password}" type="password" placeholder="enter your new password..">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="setting-form-inner">
+                                                    <div class="row">
+                                                        <div class="large-12 columns">
+                                                            <h6 class="borderBottom">About Me:</h6>
+                                                        </div>
+                                                        <div class="medium-6 columns">
+                                                            <label>Email ID:
+                                                                <input name="email" th:value="${session.user.email}" type="email" placeholder="enter your email address..">
+                                                            </label>
+                                                        </div>
+                                                        <div class="medium-6 columns">
+                                                            <label>Website URL:
+                                                                <input name="webUrl" th:value="${session.user.webUrl}" type="url" placeholder="enter your website url..">
+                                                            </label>
+                                                        </div>
+                                                        <div class="medium-6 columns end">
+                                                            <label>Phone No:
+                                                                <input name="phone" th:value="${session.user.phone}" type="tel" placeholder="enter your website url..">
+                                                            </label>
+                                                        </div>
+                                                        <div class="medium-12 columns">
+                                                            <label>Bio Description:
+                                                                <textarea name="description" th:text="${session.user.description}"></textarea>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="setting-form-inner">
+                                                    <div class="row">
+                                                        <div class="large-12 columns">
+                                                            <h6 class="borderBottom">Social Profile links:</h6>
+                                                        </div>
+                                                        <div class="medium-6 columns">
+                                                            <label>
+																qq:
+                                                                <input name="qqLink" th:value="${session.user.qqLink}" type="url" placeholder="enter your profile link..">
+                                                            </label>
+                                                        </div>
+                                                        <div class="medium-6 columns">
+                                                            <label>
+																weixin:
+                                                                <input name="weixinLink" th:value="${session.user.weixinLink}" type="url" placeholder="enter your profile link..">
+                                                            </label>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="setting-form-inner">
+                                                    <button class="button expanded" type="submit" name="setting">update now</button>
+                                                </div>
+                                            </form>
+                                        </div>
+										
+										<div class="heading">
+											<i class="fa fa-gears"></i>
+											<h4>Social Binding</h4>
+										</div>
+										
+										<div class="row">
+											<div class="large-12 columns">
+												<div class="setting-form">
+													<div class="setting-form-inner">
+														<div class="row">
+															
+															<div class="large-12 columns">
+																<h6 class="borderBottom">User Binding:</h6>
+															</div>
+															<div class="large-12 columns">
+																<a onclick="document.getElementById('QQ').submit()" href="javascript:;" class="button">
+																	<i class="fa fa-qq"></i>
+																	QQ Binding
+																</a>
+																<a onclick="QQClick()" href="javascript:;" class="button" style="margin-left: 100px;">
+																	<i class="fa fa-qq"></i>
+																	QQ UnBinding
+																</a>
+															</div>
+															<form id="QQ" action="/connect/callback.do" method="post"></form>
+
+															<div>&nbsp;</div>
+															<div class="large-12 columns">
+																<a onclick="document.getElementById('Weixin').submit()" href="javascript:;" class="button">
+																	<i class="fa fa-weixin"></i>
+																	Weixin Binding
+																</a>
+																<a onclick="weixinClick()" href="javascript:;" class="button" style="margin-left: 100px;">
+																	<i class="fa fa-weixin"></i>
+																	Weixin UnBinding
+																</a>
+															</div>
+															
+															<form id="Weixin" action="/connect/weixin" method="post"></form>
+														
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+						<div th:if="${session.user.id} ne ${user.id}" class="row secBg">
+							<div class="large-12 columns">
+								<div class="heading">
+									<i class="fa fa-gears"></i>
+									<h4>机智啊</h4>
+								</div>
+							</div>
+						</div>
+                    </section><!-- End profile settings -->
+                </div><!-- end left side content area -->
+            </div>
+	
+		<!-- footer -->
+		<div th:replace="~{fragments/footer::footer}"></div>
+		<!-- footer -->
+        </div><!--end off canvas content-->
+    </div><!--end off canvas wrapper inner-->
+</div><!--end off canvas wrapper-->
+
+<script src="js/jquery.js"></script>
+<script src="layer/layer.js"></script>
+<script type="text/javascript" th:inline="javascript">
+
+ /*   function check() {
+		var password = $("#password").val();
+		var repassword = $("#rePassword").val();
+    	if (password == repassword) {
+    	
+    	}
+    
+    }*/
+	
+    // 上传Cover
+    $("#topfileupload").on("change", function () {
+        $("#fileUploadSubmit").click();
+    });
+
+    // 上传Head
+    $("#headFile").on("change", function () {
+        $("#fileSubmit").click();
+    });
+
+    // 用户关注的请求（id 关注 followId）
+    function followClick(id, followId) {
+        // layer.msg(id + "  " + followId);
+
+        $.post(
+            [[@{~/addFollows}]],
+                {"id":id, "followId":followId},
+                function(data) {
+
+                    if (data.success) {
+                        layer.msg("关注成功！！")
+                    } else {
+                        layer.msg("自己不能关注自己。。。")
+                    }
+
+                },
+                "json"
+        )
+
+    }
+
+</script>
+<script type="text/javascript">
+	
+	// 微信的解绑
+	function weixinClick() {
+		$.ajax({
+			
+			url:"http://www.pinzhi365.com/connect/weixin",
+			type:"DELETE",
+			contentType:"application/json",
+			data:"",
+			dataType:"json",
+			success:function (result) {
+				layer.msg("解绑成功！！")
+            },
+            error:function (result) {
+                layer.msg("解绑成功")
+            }
+			
+		});
+
+    }
+    
+    // QQ的解绑
+    function QQClick() {
+        $.ajax({
+            url:"http://www.pinzhi365.com/connect/callback.do",
+            type:"DELETE",
+            contentType:"application/json",
+            data:"",
+            dataType:"json",
+            success:function (result) {
+                layer.msg("解绑成功")
+            },
+			error:function (result) {
+				layer.msg("解绑成功")
+            }
+
+        })
+    }
+	
+</script>
+
+<!-- script files -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/what-input/what-input.js"></script>
+<script src="bower_components/foundation-sites/dist/foundation.js"></script>
+<script src="js/jquery.showmore.src.js" type="text/javascript"></script>
+<script src="js/app.js"></script>
+<script src="layerslider/js/greensock.js" type="text/javascript"></script>
+<!-- LayerSlider script files -->
+<script src="layerslider/js/layerslider.transitions.js" type="text/javascript"></script>
+<script src="layerslider/js/layerslider.kreaturamedia.jquery.js" type="text/javascript"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/inewsticker.js" type="text/javascript"></script>
+<script src="js/jquery.kyco.easyshare.js" type="text/javascript"></script>
+</body>
+</html>

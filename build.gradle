@@ -1,0 +1,77 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.2.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.sikiedu'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+ext {
+	set('springCloudVersion', 'Greenwich.RC2')
+}
+
+dependencies {
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
+	implementation 'org.springframework.session:spring-session-core'
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'mysql:mysql-connector-java'
+	
+	//Security
+	implementation('org.springframework.security:spring-security-taglibs:5.1.1.RELEASE')
+	implementation('org.apache.tomcat.embed:tomcat-embed-jasper:8.5.32')
+	implementation('javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.2.1')
+	
+	implementation('org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE')
+	
+	
+	//Social
+	implementation('org.springframework.social:spring-social-core:1.1.6.RELEASE')
+	implementation('org.springframework.social:spring-social-web:1.1.6.RELEASE')
+	implementation('org.springframework.social:spring-social-security:1.1.6.RELEASE')
+	implementation('org.springframework.social:spring-social-config:1.1.6.RELEASE')
+
+    //导入自己的Jar包
+    compile files('bin/qcloudsms-1.0.5.jar')
+    compile files('bin/mail-1.4.7.jar')
+    
+	implementation('commons-codec:commons-codec:1.9')
+
+    // https://mvnrepository.com/artifact/com.chenlb.mmseg4j/mmseg4j-core
+    implementation group: 'com.chenlb.mmseg4j', name: 'mmseg4j-core', version: '1.10.0'
+
+    // https://mvnrepository.com/artifact/com.tencentcloudapi/tencentcloud-sdk-java
+	compile group: 'com.tencentcloudapi', name: 'tencentcloud-sdk-java', version: '3.0.64'
+
+    implementation group: 'biz.source_code', name: 'base64coder', version: '2010-12-19'
+    
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}

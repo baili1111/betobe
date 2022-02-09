@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<!-- 富文本 -->
+	<link rel="stylesheet" href="js/bootstrap3.3.5.css">
+	<link href="dist/summernote.css" rel="stylesheet" />
+	
+	<script src="js/jquery.js"></script>
+	<script src="js/bootstrap3.3.5.js"></script>
+	<script src="dist/summernote.js"></script>
+	<!-- 中文-->
+	<script src="dist/lang/summernote-zh-CN.js"></script>
+	
+	<!-- 初始化summernote -->
+	<script>
+        $(function(){
+            $('.summernote').summernote({
+                height: 200,
+                tabsize: 2,
+                lang: 'zh-CN'
+            });
+        });
+	</script>
+</head>
+<body>
+	<div class="summernote">summernote 1</div>
+	
+	<button id="edit" class="btn btn-primary" onclick="edit()" type="button">Edit 1</button>
+	<button id="save" class="btn btn-primary" onclick="save()" type="button">Save 2</button>
+	<button id="submit" class="btn btn-primary" type="button">Submit 3</button>
+	
+	<form id="formData" th:action="@{~/submit}" method="post">
+		<textarea id="textarea" name="data"></textarea>
+	</form>
+	
+	<!--<div th:utext="${test.str}"></div>-->
+	
+	<script type="text/javascript" th:inline="javascript">
+
+        var edit = function() {
+            $('.summernote').summernote({focus: true});
+        };
+
+        var save = function() {
+            var markup = $('.summernote').summernote('code');
+            console.log(markup);
+            // $('.summernote').summernote('destroy');
+        };
+		
+        $("#submit").click(function () {
+			// 获取富文本输入框的源码
+			var markup = $(".summernote").summernote("code");
+			// 提交表单
+			$("#textarea").html(markup);
+            $("#formData").submit();
+        })
+	</script>
+</body>
+</html>
