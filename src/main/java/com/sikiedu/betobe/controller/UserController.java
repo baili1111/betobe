@@ -355,10 +355,10 @@ public class UserController {
 	private void SMS(String telephone, HttpSession session) {
 
 		// 腾讯云中的数据
-		int appid = 1400382853;
-		String appKey = "d2eff15c52484b0502dc13c02355d353";
-		int templateId = 628474;
-		String smsSign = "codeNovice";
+		int appid = ;
+		String appKey = ;
+		int templateId = ;
+		String smsSign = ;
 
 		// 电话
 		String phoneNumber = telephone;

@@ -498,8 +498,8 @@ public class VideoController {
 		// 设置 App 的云 API 密钥
 		//sign.setSecretId("个人 API 密钥中的 Secret Id");
 		//sign.setSecretKey("个人 API 密钥中的 Secret Key");
-		sign.setSecretId("AKIDjEVO5Xk6No0xMWJ6OSgeNuIYhdOIrneH");
-		sign.setSecretKey("ZYnomVIqAIf3Xv60ue8OyVownPsGRFJC");
+		sign.setSecretId("");
+		sign.setSecretKey("");
 		sign.setCurrentTime(System.currentTimeMillis() / 1000);
 		sign.setRandom(new Random().nextInt(java.lang.Integer.MAX_VALUE));
 		sign.setSignValidDuration(3600 * 24 * 2); // 签名有效期：2天

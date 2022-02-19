@@ -57,8 +57,8 @@ public class SendEmailManager extends Thread {
 		// QQ协议
 		properties.setProperty("mail.smtp.host", "smtp.qq.com");
 		// smtp登录的账号、密码
-		properties.setProperty("mail.user", "594010359@qq.com");
-		properties.setProperty("mail.password", "wlnagpqtlwznbehg");
+		properties.setProperty("mail.user", 自行改修);
+		properties.setProperty("mail.password", 自行修改);
 		properties.setProperty("mail.debug", "true");
 
 		// 注意，要将ssl协议设置为true，530错误
